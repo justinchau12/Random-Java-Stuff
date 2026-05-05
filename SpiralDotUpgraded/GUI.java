@@ -9,7 +9,7 @@ public class GUI extends JFrame
         setSize(300, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.BLACK);
-        getContentPane().add(new Spiral(getWidth(), getHeight(), 20));
+        getContentPane().add(new Spiral(getWidth(), getHeight()));
         setVisible(true);
     }
 }

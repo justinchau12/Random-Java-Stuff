@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 
 public class GUI extends JFrame
 {
@@ -7,7 +8,8 @@ public class GUI extends JFrame
         super();
         setSize(300, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().add(new Drawing(getWidth(), getHeight(), 8));
+        getContentPane().setBackground(Color.BLACK);
+        getContentPane().add(new Spiral(getWidth(), getHeight(), 4));
         setVisible(true);
     }
 }

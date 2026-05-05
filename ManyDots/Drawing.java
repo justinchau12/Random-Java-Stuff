@@ -6,103 +6,56 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Drawing extends JPanel implements ActionListener{
-    private int fw;
-    private int fh;
-    private ArrayList<Dot> dlist = new ArrayList<Dot>();
-    private Timer timer;
     
-    public Drawing(int fw, int fh){
-        this.fw = fw;
-        this.fh = fh;
+    // Constants
+    private int dotRadius = 30;
+    
+    private int frameWidth, frameHeight;
+    private double[] pointsX, pointsY;
+    private int[] dx, dy;
+    private Color[] color;
+    private Timer timer;
+    private int count;
+    
+    public Drawing(int frameWidth, int frameHeight, int count){
+        this.frameWidth = frameWidth;
+        this.frameHeight = frameHeight;
+        this.count = count;
+        pointsX = new double[count];
+        pointsY = new double[count];
+        dx = new int[count];
+        dy = new int[count];
+        color = new Color[count];
+        
+        for (int i = 0; i < count; i++){
+            pointsX[i] = ThreadLocalRandom.current().nextInt(dotRadius, (frameWidth - dotRadius * 2));
+            pointsY[i] = ThreadLocalRandom.current().nextInt(dotRadius, (frameHeight - dotRadius * 2));
+            dx[i] = (int)(Math.random()*2+2);
+            dy[i] = (int)(Math.random()*2+2);
+            color[i] = new Color((int)(Math.random()*256), (int)(Math.random()*256), (int)(Math.random()*256));
+        }
         this.timer = new Timer(40, this);
         this.timer.start();
-    }
-    
-    public void addDot(){
-        Dot d = new Dot(fw, fh);
-        dlist.add(d);
     }
     
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for (int i = 0; i < dlist.size(); i++){
-            g.setColor(dlist.get(i).getColor());
-            g.fillOval(dlist.get(i).getX(), dlist.get(i).getY(), dlist.get(i).getRadius(), dlist.get(i).getRadius());
+        for (int i = 0; i < count; i++){
+            g.setColor(color[i]);
+            g.fillOval((int)(pointsX[i]), (int)(pointsY[i]), (int)(dotRadius * 2.0), (int)(dotRadius * 2.0));
         }
     }
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (int i = 0; i < dlist.size(); i++){
+        for (int i = 0; i < count; i++){
+        pointsX[i] += dx[i];
+        pointsY[i] += dy[i];
 
-        dlist.get(i).setX(dlist.get(i).getX() + dlist.get(i).getDX());
-        dlist.get(i).setY(dlist.get(i).getY() + dlist.get(i).getDY());
-
-        if (dlist.get(i).getX() < 0 || dlist.get(i).getX() > fw - dlist.get(i).getRadius()) dlist.get(i).setDX(dlist.get(i).getDX() * -1);
-        if (dlist.get(i).getY() < 0 || dlist.get(i).getY() > fh - dlist.get(i).getRadius()) dlist.get(i).setDY(dlist.get(i).getDY() * -1);
+        if (pointsX[i] < 0 || pointsX[i] + dotRadius * 2.0 > frameWidth) dx[i] *= -1;
+        if (pointsY[i] < 0 || pointsY[i] + dotRadius * 2.0> frameHeight) dy[i] *= -1;
         }
         repaint();
-    }
-}
-
-class Dot{
-    private int radius = 40;
-    private int x;
-    private int y;
-    private int dx = (int)(Math.random()*2+2);
-    private int dy = (int)(Math.random()*2+2);
-    private int R = (int)(Math.random()*256);
-    private int G = (int)(Math.random()*256);
-    private int B = (int)(Math.random()*256);
-    private Color color = new Color(R, G, B);
-    
-    public Dot(int fw, int fh){
-        this.x = ThreadLocalRandom.current().nextInt(this.radius, (fw-this.radius) + 1);
-        this.y = ThreadLocalRandom.current().nextInt(this.radius, (fh-this.radius) + 1);
-    }
-    
-    public Color getColor(){
-        return color;
-    }
-    
-    public int getX(){
-        return x;
-    }
-    
-    public void setX(int newX){
-        x = newX;
-        return;
-    }
-    
-    public int getY(){
-        return y;
-    }
-    
-    public void setY(int newY){
-        y = newY;
-        return;
-    }
-    
-    public int getDX(){
-        return dx;
-    }
-    
-    public void setDX(int newDX){
-        dx = newDX;
-        return;
-    }
-    
-    public int getDY(){
-        return dy;
-    }
-    
-    public void setDY(int newDY){
-        dy = newDY;
-        return;
-    }
-    
-    public int getRadius(){
-        return radius;
     }
 }
